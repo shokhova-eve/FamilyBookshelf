@@ -7,7 +7,7 @@ class AudioPlayer {
         this.initializeElements();
         this.setupEventListeners();
         this.loadFirstTrack();
-        this.tryAutoplay();
+		this.tryAutoplay();
     }
 
     checkElements() {
@@ -28,36 +28,47 @@ class AudioPlayer {
         this.nextButton = document.getElementById('nextButton');
         
         this.playlist = [
-            'assets/music/lo-fi1.mp3',
-			'assets/music/lo-fi2.mp3'
-            // 'assets/music/lo-fi3.mp3',
+            './assets/music/lo-fi1.mp3',
+			'./assets/music/lo-fi2.mp3'
         ];
         
         this.currentTrack = 0;
         this.isPlaying = false;
+
+        console.log('Audio player initialized with source:', this.playlist[0]);
     }
 
     setupEventListeners() {
-        this.playButton.addEventListener('click', () => this.togglePlay());
+        this.playButton.addEventListener('click', () => {
+            console.log('Play button clicked');
+            this.togglePlay();
+        });
+        
         this.prevButton.addEventListener('click', () => this.playPrevious());
         this.nextButton.addEventListener('click', () => this.playNext());
         
-        // Handle track ending
         this.audioPlayer.addEventListener('ended', () => this.playNext());
         
-        // Update play button image based on state
         this.audioPlayer.addEventListener('play', () => {
+            console.log('Play event triggered');
             this.playButton.querySelector('img').src = 'assets/images/audio-controls/stop.png';
             this.isPlaying = true;
         });
         
         this.audioPlayer.addEventListener('pause', () => {
+            console.log('Pause event triggered');
             this.playButton.querySelector('img').src = 'assets/images/audio-controls/play.png';
             this.isPlaying = false;
         });
+
+        this.audioPlayer.addEventListener('error', (e) => {
+            console.error('Audio error:', e);
+            console.error('Error code:', this.audioPlayer.error.code);
+            console.error('Error message:', this.audioPlayer.error.message);
+        });
     }
 
-    async tryAutoplay() {
+	async tryAutoplay() {
         try {
             // First try playing muted
             this.audioPlayer.muted = true;
@@ -75,16 +86,17 @@ class AudioPlayer {
     }
 
     loadFirstTrack() {
+        console.log('Loading first track...');
         this.audioPlayer.src = this.playlist[this.currentTrack];
         this.audioPlayer.load();
         
-        // Add event listener for when the track is loaded
         this.audioPlayer.addEventListener('loadeddata', () => {
-            console.log('Track loaded and ready to play');
+            console.log('Track loaded and ready');
         });
     }
 
     togglePlay() {
+        console.log('Toggle play called. Current paused state:', this.audioPlayer.paused);
         if (this.audioPlayer.paused) {
             this.play();
         } else {
@@ -93,15 +105,22 @@ class AudioPlayer {
     }
 
     play() {
+        console.log('Attempting to play...');
         const playPromise = this.audioPlayer.play();
+        
         if (playPromise !== undefined) {
-            playPromise.catch(error => {
-                console.log("Playback was prevented. Waiting for user interaction.");
-            });
+            playPromise
+                .then(() => {
+                    console.log('Playback started successfully');
+                })
+                .catch(error => {
+                    console.error('Playback failed:', error);
+                });
         }
     }
 
     pause() {
+        console.log('Pausing playback');
         this.audioPlayer.pause();
     }
 
@@ -120,5 +139,6 @@ class AudioPlayer {
 
 // Initialize player when document is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing audio player');
     const player = new AudioPlayer();
 });

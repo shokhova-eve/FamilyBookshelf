@@ -55,15 +55,24 @@
 
 	<!-- Keep your audio.js script -->
 	<script>
-        // Debug helper
         document.addEventListener('DOMContentLoaded', () => {
             console.log('DOM loaded');
-            console.log('audioPlayer element:', document.getElementById('audioPlayer'));
-            console.log('playButton element:', document.getElementById('playButton'));
-            console.log('prevButton element:', document.getElementById('prevButton'));
-            console.log('nextButton element:', document.getElementById('nextButton'));
+            const audio = document.getElementById('audioPlayer');
+            console.log('Audio source:', audio.src);
+            
+            // Test audio loading
+            audio.addEventListener('loadeddata', () => {
+                console.log('Audio file loaded successfully');
+            });
+            
+            audio.addEventListener('error', (e) => {
+                console.error('Audio loading error:', audio.error);
+            });
         });
     </script>
+
+    <!-- Audio player script -->
+    <script src="audio.js"></script>
     <div class="bookshelf-wrapper">
         <a href="bookshelf.html">
             <img src="assets/images/start-bookshelf.png" alt="Bookshelf" class="clickable-bookshelf">
