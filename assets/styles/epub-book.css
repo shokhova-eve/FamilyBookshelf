@@ -1,0 +1,30 @@
+.epub-book {
+    width: 100px; /* Base width */
+    height: 150px; /* Fixed height */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+    transition: box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.epub-book:hover {
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.4);
+}
+
+.epub-book img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.epub-book .no-cover {
+    padding: 10px;
+    text-align: center;
+    color: #666;
+    font-size: 0.8em;
+}
