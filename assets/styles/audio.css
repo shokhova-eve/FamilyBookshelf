@@ -1,0 +1,32 @@
+.simple-player {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.audio-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.control-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.control-button img {
+    width: 24px;
+    height: 24px;
+    filter: invert(1); /* Makes icons white */
+}
+
+.control-button:hover img {
+    opacity: 0.8;
+}
