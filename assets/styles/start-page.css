@@ -2,26 +2,20 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    /* Remove any background color that might be blocking the background image */
 }
 
 .start-page {
     background-image: url('../images/start-background.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     min-height: 100vh;
     position: relative;
 }
 
-/* Make container transparent instead of white */
 .start-page .container {
     background-color: transparent;
     position: relative;
     z-index: 1;
 }
 
-/* Style specifically for the welcome text */
 .welcome-text {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
@@ -29,12 +23,10 @@
     margin-bottom: 30px;
 }
 
-/* Control bookshelf image size and position */
 .bookshelf-container {
     margin: 20px auto;
     text-align: center;
-    /* Specify maximum width for the container */
-    max-width: 162px; /* Adjust this value as needed */
+    max-width: 162px;
 }
 
 .bookshelf-wrapper {
@@ -47,25 +39,28 @@
     justify-content: center;
     width: 80%;
     max-width: 1200px;
-    z-index: 2;
 }
 
-.clickable-bookshelf {
-    width: 35vw; /* 35% of viewport width */
-    max-width: 450px; /* Maximum width */
-    min-width: 200px; /* Minimum width */
-    height: auto; /* Maintain aspect ratio */
+.clickable-bookshelf, bookshelf-shadow {
+    width: 35vw;
+    max-width: 450px;
+    min-width: 200px;
+    height: auto;
     cursor: pointer;
     transition: transform 0.3s ease;
     object-fit: contain;
     filter: drop-shadow(0 0 10px rgba(0,0,0,0.3));
+	z-index: 2;
 }
 
+.bookshelf-shadow {
+    bottom: 100px;
+    z-index: 1;
+}
 .clickable-bookshelf:hover {
     transform: scale(1.05);
 }
 
-/* Responsive adjustments */
 @media (max-width: 1200px) {
     .bookshelf-wrapper {
         gap: 15%;
@@ -99,9 +94,3 @@
     }
 }
 
-.bookshelf-shadow {
-    position: absolute;
-    bottom: 30px;
-    width: 100%;
-    z-index: 2;
-}
