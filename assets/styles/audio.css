@@ -3,9 +3,12 @@
     top: 20px;
     right: 20px;
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 10px;
+    background: rgba(255, 255, 255, 0.8); /* Bright red background */
+    padding: 20px;
     border-radius: 8px;
+    border: 3px solid white;
+    min-width: 200px !important;
+    min-height: 50px !important;
 }
 
 .audio-controls {
@@ -22,9 +25,8 @@
 }
 
 .control-button img {
-    width: 24px;
-    height: 24px;
-    filter: invert(1); /* Makes icons white */
+    width: 30px;
+    height: 30px;
 }
 
 .control-button:hover img {

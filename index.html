@@ -37,16 +37,31 @@
         </div>
     </div>
 
-	<div id="audioPlayerContainer"></div>
+	<!-- Replace the audioPlayerContainer div with this code -->
+	<div class="simple-player" style="position: fixed; top: 20px; right: 20px; z-index: 1000; background: rgba(255, 0, 0, 0.8); padding: 20px; border: 3px solid yellow;">
+		<audio id="audioPlayer"></audio>
+		<div class="audio-controls">
+			<button id="prevButton" class="control-button">
+				<img src="assets/images/audio-controls/backward.png" alt="Previous">
+			</button>
+			<button id="playButton" class="control-button">
+				<img src="assets/images/audio-controls/play.png" alt="Play">
+			</button>
+			<button id="stopButton" class="control-button">
+				<img src="assets/images/audio-controls/stop.png" alt="Stop">
+			</button>
+			<button id="nextButton" class="control-button">
+				<img src="assets/images/audio-controls/forward.png" alt="Next">
+			</button>
+		</div>
+	</div>
 
+	<!-- Keep your audio.js script -->
 	<script src="audio.js"></script>
 	<script>
-		// Load the audio player HTML
-		fetch('audio.html')
-			.then(response => response.text())
-			.then(html => {
-				document.getElementById('audioPlayerContainer').innerHTML = html;
-			});
+		document.addEventListener('DOMContentLoaded', function() {
+			const player = new AudioPlayer();
+		});
 	</script>
     <div class="bookshelf-wrapper">
         <a href="bookshelf.html">
@@ -71,7 +86,6 @@
     <script src="auth-handler.js"></script>
     <script src="book-click.js"></script>
 	<script src="main.js"></script>
-	<script src="audio.js"></script>
 
     <div id="authModal" class="modal">
         <div class="modal-content">

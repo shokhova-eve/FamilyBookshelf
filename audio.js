@@ -1,5 +1,11 @@
 class AudioPlayer {
-    constructor() {
+	constructor() {
+        this.initializeElements();
+        this.setupEventListeners();
+        this.loadFirstTrack();
+    }
+
+    initializeElements() {
         this.audioPlayer = document.getElementById('audioPlayer');
         this.playButton = document.getElementById('playButton');
         this.stopButton = document.getElementById('stopButton');
@@ -8,21 +14,12 @@ class AudioPlayer {
         
         this.playlist = [
             'assets/music/lo-fi1.mp3',
-            'assets/music/lo-fi2.mp3',
-            // Add all your .mp3 files here
+			'assets/music/lo-fi2.mp3'
+            // Add other tracks here
         ];
         
         this.currentTrack = 0;
         this.isPlaying = false;
-        
-        this.initializePlayer();
-        this.setupEventListeners();
-    }
-
-    initializePlayer() {
-        this.audioPlayer.src = this.playlist[this.currentTrack];
-        this.audioPlayer.load();
-        this.play(); // Auto-play first track
     }
 
     setupEventListeners() {
@@ -37,35 +34,44 @@ class AudioPlayer {
         // Update play button image based on state
         this.audioPlayer.addEventListener('play', () => {
             this.playButton.querySelector('img').src = 'assets/images/audio-controls/stop.png';
+            this.isPlaying = true;
         });
         
-        this.audioPlayer.addEventListener('stop', () => {
+        this.audioPlayer.addEventListener('pause', () => {
             this.playButton.querySelector('img').src = 'assets/images/audio-controls/play.png';
+            this.isPlaying = false;
         });
     }
 
+    loadFirstTrack() {
+        this.audioPlayer.src = this.playlist[this.currentTrack];
+        this.audioPlayer.load();
+    }
+
     togglePlay() {
-        if (this.audioPlayer.stopped) {
+        if (this.audioPlayer.paused) {
             this.play();
         } else {
-            this.syop();
+            this.pause();
         }
     }
 
     play() {
-        this.audioPlayer.play();
-        this.isPlaying = true;
+        const playPromise = this.audioPlayer.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Playback was prevented. Waiting for user interaction.");
+            });
+        }
     }
 
     pause() {
         this.audioPlayer.pause();
-        this.isPlaying = false;
     }
 
     stop() {
         this.audioPlayer.pause();
         this.audioPlayer.currentTime = 0;
-        this.isPlaying = false;
     }
 
     playNext() {
