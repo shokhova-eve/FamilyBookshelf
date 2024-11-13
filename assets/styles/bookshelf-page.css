@@ -1,0 +1,105 @@
+/* General styles */
+.bookshelf-page {
+    display: flex;
+    flex-wrap: wrap; /* Added for better responsiveness */
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f5f5f5; /* Consolidated background setting */
+}
+
+/* Left section styles */
+.left-section {
+    flex: 0 0 50%;
+    background-color: #682556;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 56px);
+    position: relative;
+}
+
+.background-image {
+    max-width: 90%; /* or a value you prefer */
+    width: auto;
+    height: auto;
+}
+
+/* Right section styles */
+.right-section {
+    flex: 0 0 50%;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-left: 1px solid #dee2e6;
+    overflow-y: auto;
+}
+
+/* Books grid */
+.books-grid {
+    display: grid;
+    gap: 40px 20px;
+    justify-content: center;
+    padding: 2%;
+    margin: 0 auto;
+    width: fit-content;
+    position: absolute;
+    bottom: 14.5%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Error message styles */
+.error {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+.error button {
+    margin-top: 10px;
+    padding: 5px 15px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.error button:hover {
+    background: #0056b3;
+}
+
+/* Responsive grid layouts */
+@media (min-width: 1200px) {
+    .books-grid {
+        grid-template-columns: repeat(4, 100px); /* Updated based on priority */
+    }
+    .left-section {
+        min-width: 400px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .books-grid {
+        grid-template-columns: repeat(2, 100px);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .left-section,
+    .right-section {
+        flex: 0 0 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .bookshelf-page {
+        flex-direction: column;
+    }
+    .left-section,
+    .right-section {
+        flex: 0 0 100%;
+    }
+}

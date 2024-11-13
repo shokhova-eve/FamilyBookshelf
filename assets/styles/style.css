@@ -14,49 +14,6 @@
     position: relative;
 }
 
-.bookshelf-page {
-    display: flex;
-	margin: 0;
-	width: 100%;
-    min-height: 100vh;
-}
-
-.left-section {
-    flex: 0 0 50%;
-    background-image: url('../images/bookshelf-background.png');
-	background-color: #682556;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 56px);
-    position: relative;
-}
-
-.right-section {
-    flex: 0 0 50%;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-left: 1px solid #dee2e6;
-    overflow-y: auto;
-}
-
-.books-grid {
-    display: grid;
-    gap: 40px 20px;
-    justify-content: center;
-    padding: 2%;
-    margin: 0 auto;
-    width: fit-content;
-    position: absolute;
-    bottom: 14.5%;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
 /* Make container transparent instead of white */
 .start-page .container {
     background-color: transparent;
@@ -142,75 +99,9 @@
     }
 }
 
-/* Make the body background a neutral color */
-.bookshelf-page {
-    background-color: #f5f5f5; /* Light grey background */
+.bookshelf-shadow {
+    position: absolute;
+    bottom: 60%;
+    width: 100%;
+    z-index: 2;
 }
-
-.error {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 20px;
-    color: #666;
-}
-
-.error button {
-    margin-top: 10px;
-    padding: 5px 15px;
-    border: none;
-    background: #007bff;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.error button:hover {
-    background: #0056b3;
-}
-
-/* Responsive grid layouts */
-@media (min-width: 1200px) {
-    /* Large screens - 5 books per row */
-    .books-grid {
-        grid-template-columns: repeat(3, 100px);
-    }
-}
-
-@media (max-width: 1199px) {
-    .books-grid {
-        grid-template-columns: repeat(2, 100px);
-    }
-}
-
-/* Responsive grid layouts based on container width */
-@media (min-width: 1200px) {
-    .left-section {
-        min-width: 400px;
-    }
-    
-    .books-grid {
-        grid-template-columns: repeat(4, 100px); /* 4 books when enough space */
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1199px) {
-    .left-section {
-        flex: 0 0 50%;
-    }
-    .right-section {
-        flex: 0 0 50%;
-    }
-}
-
-/* Make it responsive for smaller screens */
-@media (max-width: 768px) {
-    .bookshelf-page {
-        flex-direction: column;
-    }
-    
-    .left-section,
-    .right-section {
-        flex: 0 0 100%;
-    }
-}
-
