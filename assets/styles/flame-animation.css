@@ -2,8 +2,7 @@
   .flame {
 	position: absolute;
 	top: 7%; /* Adjust as needed */
-	left: 2.5%;
-	transform: translateX(-50%);
+	left: 5%;
 	width: 20px; /* Adjust for responsiveness */
 	height: 30px;
 	background: url('../images/animation/flame.png') no-repeat center center / contain;
