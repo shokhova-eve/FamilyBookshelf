@@ -13,8 +13,6 @@ Powered on NodeJS + Firebase + Bootstrap + EPUB.js
 │   │   ├── start-background.png
 │   │   ├── start-bookshelf.png
 │   │   └── bookshelf-background.png
-│   ├── js/
-│   │   └── book-click.js
 │   └── styles/
 │       └── style.css
 ├── backend/
