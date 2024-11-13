@@ -1,0 +1,21 @@
+
+  .flame {
+	position: absolute;
+	top: 7%; /* Adjust as needed */
+	left: 2.5%;
+	transform: translateX(-50%);
+	width: 20px; /* Adjust for responsiveness */
+	height: 30px;
+	background: url('../images/animation/flame.png') no-repeat center center / contain;
+	animation: flicker 1s infinite alternate;
+	z-index:4;
+  }
+
+  @keyframes flicker {
+	0% {
+	  transform: translateX(-50%) scale(0.8);
+	}
+	100% {
+	  transform: translateX(-50%) scale(1.2);
+	}
+  }
