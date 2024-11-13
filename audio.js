@@ -1,21 +1,36 @@
 class AudioPlayer {
 	constructor() {
+        if (!this.checkElements()) {
+            console.error('Some audio player elements are missing');
+            return;
+        }
         this.initializeElements();
         this.setupEventListeners();
         this.loadFirstTrack();
+        this.tryAutoplay();
+    }
+
+    checkElements() {
+        const elements = {
+            audioPlayer: document.getElementById('audioPlayer'),
+            playButton: document.getElementById('playButton'),
+            prevButton: document.getElementById('prevButton'),
+            nextButton: document.getElementById('nextButton')
+        };
+
+        return Object.values(elements).every(element => element !== null);
     }
 
     initializeElements() {
         this.audioPlayer = document.getElementById('audioPlayer');
         this.playButton = document.getElementById('playButton');
-        this.stopButton = document.getElementById('stopButton');
         this.prevButton = document.getElementById('prevButton');
         this.nextButton = document.getElementById('nextButton');
         
         this.playlist = [
             'assets/music/lo-fi1.mp3',
 			'assets/music/lo-fi2.mp3'
-            // Add other tracks here
+            // 'assets/music/lo-fi3.mp3',
         ];
         
         this.currentTrack = 0;
@@ -24,7 +39,6 @@ class AudioPlayer {
 
     setupEventListeners() {
         this.playButton.addEventListener('click', () => this.togglePlay());
-        this.stopButton.addEventListener('click', () => this.stop());
         this.prevButton.addEventListener('click', () => this.playPrevious());
         this.nextButton.addEventListener('click', () => this.playNext());
         
@@ -43,9 +57,31 @@ class AudioPlayer {
         });
     }
 
+    async tryAutoplay() {
+        try {
+            // First try playing muted
+            this.audioPlayer.muted = true;
+            await this.audioPlayer.play();
+            
+            // If successful, unmute and continue playing
+            this.audioPlayer.muted = false;
+            
+            console.log('Autoplay successful');
+        } catch (error) {
+            console.log('Autoplay prevented. Click play to start music.');
+            // Reset muted state if autoplay fails
+            this.audioPlayer.muted = false;
+        }
+    }
+
     loadFirstTrack() {
         this.audioPlayer.src = this.playlist[this.currentTrack];
         this.audioPlayer.load();
+        
+        // Add event listener for when the track is loaded
+        this.audioPlayer.addEventListener('loadeddata', () => {
+            console.log('Track loaded and ready to play');
+        });
     }
 
     togglePlay() {
@@ -67,11 +103,6 @@ class AudioPlayer {
 
     pause() {
         this.audioPlayer.pause();
-    }
-
-    stop() {
-        this.audioPlayer.pause();
-        this.audioPlayer.currentTime = 0;
     }
 
     playNext() {

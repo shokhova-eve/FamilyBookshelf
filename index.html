@@ -38,7 +38,7 @@
     </div>
 
 	<!-- Replace the audioPlayerContainer div with this code -->
-	<div class="simple-player" style="position: fixed; top: 20px; right: 20px; z-index: 1000; background: rgba(255, 0, 0, 0.8); padding: 20px; border: 3px solid yellow;">
+	<div class="simple-player">
 		<audio id="audioPlayer"></audio>
 		<div class="audio-controls">
 			<button id="prevButton" class="control-button">
@@ -47,9 +47,6 @@
 			<button id="playButton" class="control-button">
 				<img src="assets/images/audio-controls/play.png" alt="Play">
 			</button>
-			<button id="stopButton" class="control-button">
-				<img src="assets/images/audio-controls/stop.png" alt="Stop">
-			</button>
 			<button id="nextButton" class="control-button">
 				<img src="assets/images/audio-controls/forward.png" alt="Next">
 			</button>
@@ -57,12 +54,16 @@
 	</div>
 
 	<!-- Keep your audio.js script -->
-	<script src="audio.js"></script>
 	<script>
-		document.addEventListener('DOMContentLoaded', function() {
-			const player = new AudioPlayer();
-		});
-	</script>
+        // Debug helper
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded');
+            console.log('audioPlayer element:', document.getElementById('audioPlayer'));
+            console.log('playButton element:', document.getElementById('playButton'));
+            console.log('prevButton element:', document.getElementById('prevButton'));
+            console.log('nextButton element:', document.getElementById('nextButton'));
+        });
+    </script>
     <div class="bookshelf-wrapper">
         <a href="bookshelf.html">
             <img src="assets/images/start-bookshelf.png" alt="Bookshelf" class="clickable-bookshelf">

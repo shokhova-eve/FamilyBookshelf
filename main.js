@@ -1,5 +1,3 @@
-const { google } = require('googleapis');
-
 async function authorize() {
   const auth = new google.auth.GoogleAuth({
     keyFile: 'credentials.json', // The JSON file you downloaded
