@@ -1,6 +1,8 @@
 # Family Library
 
-A web-based family library application that allows you to browse and view books in a beautiful interface.
+A web-based family library application that allows you to browse and view books.
+
+Powered on NodeJS + Firebase + Bootstrap + EPUB.js
 
 ## Project Structure
 
@@ -20,36 +22,18 @@ A web-based family library application that allows you to browse and view books 
 ├── index.html
 ├── bookshelf.html
 ├── main.js
+├── book-click.js
+├── auth-handler.js
 └── README.md
 ```
 
-## Installation
+## Features
 
-1. Clone the repository:
-```bash
-git clone https://github.com/YOUR_USERNAME/Bookshelf.git
-cd Bookshelf
-```
+- Browse and view books 
+- Login with Google
+- Sign up with Google
+- Responsive design
 
-2. Backend setup (if running locally):
-```bash
-cd backend
-npm install
-# Create credentials.json if needed
-cd ..
-```
-
-3. Running the application:
-   - For development with backend:
-     - Start the backend server: `cd backend && node server.js`
-     - Open index.html in your browser
-   - For GitHub Pages version:
-     - Simply visit: https://YOUR_USERNAME.github.io/Bookshelf/
-
-## Development vs Production
-- The `main` branch contains the full version with backend functionality
-- The `gh-pages` branch contains a static version for GitHub Pages hosting
-
-## Notes
-- Make sure to never commit sensitive information in credentials.json
-- The GitHub Pages version uses static data instead of a backend server
+## Planned Features
+- Read books in the browser
+- Download books in EPUB format
