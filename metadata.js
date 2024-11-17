@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	async function fetchAndCacheBooks() {
 		try {
 			console.log('Fetching books from server...');
-			const response = await fetch('http://127.0.0.1:5500/api/books/batch-metadata');
+			const response = await fetch('http://localhost:3000/api/books/batch-metadata');
 			
 			if (!response.ok) {
 				throw new Error(`Server responded with status: ${response.status}`);
@@ -93,9 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 					`;
 				}
 				
-				bookElement.addEventListener('click', () => {
-					handleBookClick(bookData);
-				});
+				bookElement.addEventListener('click', (e) => window.bookClickHandler.handleBookClick(e, bookData));
 				
 				return bookElement;
 			});

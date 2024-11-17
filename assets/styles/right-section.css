@@ -1,0 +1,36 @@
+/* Right section styles */
+.right-section {
+    flex: 0 0 50%;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-left: 1px solid #dee2e6;
+    overflow-y: auto;
+	position: relative;
+    z-index: 2;
+}
+
+.right-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../images/right-section-background.png');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}
+
+.right-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../images/right-section-shelf.png');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+}

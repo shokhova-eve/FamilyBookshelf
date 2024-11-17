@@ -14,10 +14,13 @@
     background-color: #682556;
     padding: 20px;
     display: flex;
+	flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: calc(100vh - 56px);
     position: relative;
+	box-shadow: 10px 0 15px -5px rgba(0, 0, 0, 0.7);
+	z-index: 1;
 }
 
 .background-image {
@@ -26,29 +29,48 @@
     height: auto;
 }
 
-/* Right section styles */
-.right-section {
-    flex: 0 0 50%;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-left: 1px solid #dee2e6;
-    overflow-y: auto;
-}
-
 /* Books grid */
 .books-grid {
     display: grid;
-    gap: 40px 20px;
+    gap: 60px 100px;
     justify-content: center;
     padding: 2%;
     margin: 0 auto;
     width: fit-content;
+	max-width: 90%;
     position: absolute;
-    bottom: 14.5%;
+    bottom: 30vh;
     left: 50%;
     transform: translateX(-50%);
 }
 
+.book-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.book-shadow {
+    position: absolute;
+    bottom: -40px; /* Adjust this value to position the shadow */
+    width: 100%; /* Adjust based on your shadow image size */
+    height: auto;
+    z-index: -1; /* Places shadow behind the book */
+    pointer-events: none; /* Prevents shadow from interfering with book clicks */
+}
+
+.loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
 /* Error message styles */
 .error {
     grid-column: 1 / -1;
@@ -83,8 +105,12 @@
 
 @media (max-width: 1199px) {
     .books-grid {
-        grid-template-columns: repeat(2, 100px);
+        grid-template-columns: repeat(3, 100px);
     }
+	.epub-book {
+		width: 90px;
+		height: 120px;
+	}
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
