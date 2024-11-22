@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 0; /* Initially collapsed */
-    background: white;
+    background-color: #fffbe6;
     overflow: hidden;
     transition: height 0.4s ease;
     z-index: 1000;
@@ -12,18 +12,20 @@
 }
 
 .overlay.minimized {
-    height: 20px !important;
+    height: 60px !important;
     cursor: pointer;
+    top: 0;
+    bottom: unset;
 }
 
 .overlay.open {
-    height: 100%;
+    height: 60vh;
 }
 
 .overlay-controls {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 10px;
+    right: 10px;
     padding: 10px;
     display: flex;
     gap: 10px;
@@ -37,20 +39,19 @@
     color: #333;
     cursor: pointer;
     padding: 5px;
-    font-size: 16px;
+    font-size: 20px; /* Increased size */
     transition: color 0.3s ease;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+    border-radius: 50%;
 }
 
 .arrow-button:hover,
 .close-button:hover {
     color: #007bff;
-}
-
-.overlay.minimized .arrow-button i {
-    transform: rotate(180deg);
-}
-
-.overlay-content {
-    padding: 20px;
-    margin-top: 40px; /* Space for controls */
+    background-color: rgba(255, 255, 255, 0.9);
 }

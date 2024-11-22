@@ -1,41 +1,116 @@
-async function authorize() {
-  const auth = new google.auth.GoogleAuth({
-    keyFile: 'credentials.json', // The JSON file you downloaded
-    scopes: ['https://www.googleapis.com/auth/drive.readonly']
-  });
-  const authClient = await auth.getClient();
-  return google.drive({ version: 'v3', auth: authClient });
+const BACKEND_URL = 'http://localhost:5500';
+
+// Cache helper functions
+async function getCachedBooks() {
+    try {
+        const cache = await caches.open('books-cache');
+        const response = await cache.match(`${BACKEND_URL}/api/books/batch-metadata`);
+        if (response) {
+            console.log('Found cached books');
+            return await response.json();
+        }
+        return null;
+    } catch (error) {
+        console.error('Cache error:', error);
+        return null;
+    }
+}
+
+async function cacheBooks(books) {
+    try {
+        const cache = await caches.open('books-cache');
+        await cache.put(
+            `${BACKEND_URL}/api/books/batch-metadata`, 
+            new Response(JSON.stringify(books))
+        );
+        console.log('Cached books list');
+    } catch (error) {
+        console.error('Cache error:', error);
+    }
 }
 
 async function listEpubBooks() {
-  try {
-    const drive = await authorize();
-    const response = await drive.files.list({
-      q: "mimeType='application/epub+zip'",
-      fields: 'files(id, name, webContentLink)'
-    });
-    
-    return response.data.files;
-  } catch (err) {
-    console.error('Error listing files:', err);
-    return [];
-  }
-}
-
-async function displayBookCover(bookId) {
     try {
-        const response = await fetch(`http://localhost:3000/api/books/${bookId}/metadata`);
-        const metadata = await response.json();
+        // Try cache first
+        const cachedBooks = await getCachedBooks();
+        if (cachedBooks) {
+            console.log('Using cached books');
+            return cachedBooks;
+        }
+
+        // If not in cache, fetch from server
+        const response = await fetch(`${BACKEND_URL}/api/books/batch-metadata`);
+        if (!response.ok) throw new Error('Failed to fetch books');
         
-        const bookContainer = document.querySelector('.epub-book');
-        const coverImage = document.createElement('img');
-        coverImage.src = metadata.coverUrl; // We'll need to add this to the backend
-        coverImage.alt = metadata.name;
-        bookContainer.appendChild(coverImage);
+        const books = await response.json();
+        await cacheBooks(books);
+        return books;
     } catch (error) {
-        console.error('Error displaying book cover:', error);
-        // Optionally show a placeholder image
-        const bookContainer = document.querySelector('.epub-book');
-        bookContainer.innerHTML = '<div class="no-cover">No Cover Available</div>';
+        console.error('Error listing books:', error);
+        return [];
     }
 }
+
+async function displayBooks(books) {
+    const booksGrid = document.querySelector('.books-grid');
+    const loadingIndicator = document.querySelector('.loading-indicator');
+    
+    if (!booksGrid) {
+        console.error('Books grid not found!');
+        return;
+    }
+
+    try {
+        // Show loading indicator
+        if (loadingIndicator) {
+            loadingIndicator.style.display = 'block';
+        }
+
+        // Clear existing books but keep loading indicator
+        booksGrid.innerHTML = '<div id="loading" class="loading-indicator">Loading books...</div>';
+
+        // Create and append book elements
+        for (const book of books) {
+            // Create book element
+            const bookElement = document.createElement('div');
+            bookElement.className = 'epub-book';
+            bookElement.dataset.bookId = book.id;
+
+            // Add book cover if available
+            if (book.coverUrl) {
+                const coverImg = document.createElement('img');
+                coverImg.src = book.coverUrl;
+                coverImg.alt = book.name;
+                coverImg.className = 'book-cover';
+                bookElement.appendChild(coverImg);
+            }
+
+            // Create and add shadow element inside the book element
+            const shadowElement = document.createElement('img');
+            shadowElement.src = 'assets/images/book-shadow.png';
+            shadowElement.alt = '';
+            shadowElement.className = 'book-shadow';
+            bookElement.appendChild(shadowElement);
+
+			bookElement.addEventListener('click', (event) => {
+                if (window.bookClickHandler) {
+                    window.bookClickHandler.handleBookClick(event, book);
+                }
+			});
+            // Add book to grid
+            booksGrid.appendChild(bookElement);
+        }
+    } finally {
+        // Hide loading indicator
+        if (loadingIndicator) {
+            loadingIndicator.style.display = 'none';
+        }
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('Initializing books...');
+    const books = await listEpubBooks();
+    await displayBooks(books);
+});

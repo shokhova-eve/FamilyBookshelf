@@ -1,3 +1,6 @@
+import 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js';
+import 'https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
 	const booksContainer = document.querySelector('.books-grid');
 	const CACHE_KEY = 'books_metadata';
@@ -64,28 +67,60 @@ document.addEventListener('DOMContentLoaded', async () => {
 				throw new Error('Books metadata is not an array');
 			}
 			
-			const bookElements = booksMetadata.map(bookData => {
+			const bookElements = await Promise.all(booksMetadata.map(async bookData => {
 				const bookElement = document.createElement('div');
 				bookElement.className = 'epub-book';
 				
-				// Parse HTML content if exists in metadata
-				if (bookData.metadata && bookData.metadata.description) {
-					const parser = new DOMParser();
-					const decodedDescription = parser.parseFromString(
-						bookData.metadata.description, 
-						'text/html'
-					).body.innerHTML;
-					bookData.metadata.description = decodedDescription;
-				}
-				
-				if (bookData.coverUrl) {
-					bookElement.innerHTML = `
-						<img src="${bookData.coverUrl}" 
-							 alt="${bookData.name}" 
-							 loading="lazy"
-							 style="width: 100%; height: 100%; object-fit: cover;">
-					`;
-				} else {
+				// Create a temporary Book instance to get metadata
+				const book = ePub(bookData.filePath);
+				try {
+					const metadata = await book.loaded.metadata;
+					console.log('EPub metadata:', metadata);
+					
+					// Store the full metadata for later use
+					bookData.epubMetadata = {
+						title: metadata.title,
+						creator: metadata.creator,
+						description: metadata.description,
+						language: metadata.language,
+						publisher: metadata.publisher,
+						// Add any other metadata fields you need
+					};
+					
+					if (bookData.coverUrl) {
+						bookElement.innerHTML = `
+							<img src="${bookData.coverUrl}" 
+								 alt="${metadata.title || bookData.name}" 
+								 loading="lazy"
+								 style="width: 100%; height: 100%; object-fit: cover;">
+						`;
+					} else {
+						bookElement.innerHTML = `
+							<div class="no-cover">
+								<p>${metadata.title || bookData.name}</p>
+							</div>
+						`;
+					}
+					
+					// Add click handler with full metadata
+					bookElement.addEventListener('click', (e) => {
+						const metadataHtml = `
+							<div class="metadata-container">
+								<h1 class="book-title">${metadata.title || bookData.name}</h1>
+								<h2 class="book-author">${metadata.creator || 'Unknown Author'}</h2>
+								<div class="book-description">
+									${metadata.description || 'No description available'}
+								</div>
+								${metadata.publisher ? `<p class="book-publisher">Publisher: ${metadata.publisher}</p>` : ''}
+								${metadata.language ? `<p class="book-language">Language: ${metadata.language}</p>` : ''}
+							</div>
+						`;
+						window.overlay.open(metadataHtml);
+					});
+					
+				} catch (error) {
+					console.error('Error loading epub metadata:', error);
+					// Fallback to basic display if metadata loading fails
 					bookElement.innerHTML = `
 						<div class="no-cover">
 							<p>${bookData.name}</p>
@@ -93,10 +128,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 					`;
 				}
 				
-				bookElement.addEventListener('click', (e) => window.bookClickHandler.handleBookClick(e, bookData));
-				
 				return bookElement;
-			});
+			}));
 			
 			booksContainer.append(...bookElements);
 		} catch (error) {

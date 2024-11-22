@@ -1,7 +1,8 @@
 .epub-book {
-    width: 120px; /* Base width */
+    position: relative;
+	width: 120px; /* Base width */
     height: 170px; /* Fixed height */
-    margin: 0 auto;
+	margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,7 +11,6 @@
     box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
     transition: box-shadow 0.3s ease;
     overflow: hidden;
-	z-index: 1;
 }
 
 .epub-book:hover {
