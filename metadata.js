@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 	async function fetchAndCacheBooks() {
 		try {
 			console.log('Fetching books from server...');
-			const response = await fetch('http://localhost:3000/api/books/batch-metadata');
+			const response = await fetch('http://localhost:5500/api/books/batch-metadata');
 			
 			if (!response.ok) {
 				throw new Error(`Server responded with status: ${response.status}`);

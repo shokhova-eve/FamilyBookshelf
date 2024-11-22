@@ -53,25 +53,24 @@ async function listEpubBooks() {
 
 async function displayBooks(books) {
     const booksGrid = document.querySelector('.books-grid');
-    const loadingIndicator = document.querySelector('.loading-indicator');
     
     if (!booksGrid) {
         console.error('Books grid not found!');
         return;
     }
 
-    try {
-        // Show loading indicator
-        if (loadingIndicator) {
-            loadingIndicator.style.display = 'block';
-        }
+    // Add loading indicator at the start
+    booksGrid.innerHTML = '<div id="loading" class="loading-indicator">Loading books...</div>';
 
-        // Clear existing books but keep loading indicator
-        booksGrid.innerHTML = '<div id="loading" class="loading-indicator">Loading books...</div>';
+    try {
+        // Wait a small moment to ensure loading indicator is visible
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Clear grid and remove loading indicator
+        booksGrid.innerHTML = '';
 
         // Create and append book elements
         for (const book of books) {
-            // Create book element
             const bookElement = document.createElement('div');
             bookElement.className = 'epub-book';
             bookElement.dataset.bookId = book.id;
@@ -85,32 +84,40 @@ async function displayBooks(books) {
                 bookElement.appendChild(coverImg);
             }
 
-            // Create and add shadow element inside the book element
+            // Create and add shadow element
             const shadowElement = document.createElement('img');
             shadowElement.src = 'assets/images/book-shadow.png';
             shadowElement.alt = '';
             shadowElement.className = 'book-shadow';
             bookElement.appendChild(shadowElement);
 
-			bookElement.addEventListener('click', (event) => {
+            // Add click handler
+            bookElement.addEventListener('click', (event) => {
                 if (window.bookClickHandler) {
                     window.bookClickHandler.handleBookClick(event, book);
                 }
-			});
+            });
+
             // Add book to grid
             booksGrid.appendChild(bookElement);
         }
-    } finally {
-        // Hide loading indicator
-        if (loadingIndicator) {
-            loadingIndicator.style.display = 'none';
-        }
+    } catch (error) {
+        console.error('Error displaying books:', error);
+        // Show error in grid if something goes wrong
+        booksGrid.innerHTML = '<div class="error-message">Error loading books</div>';
     }
 }
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('Initializing books...');
+    const booksGrid = document.querySelector('.books-grid');
+    
+    // Show loading indicator before fetching books
+    if (booksGrid) {
+        booksGrid.innerHTML = '<div id="loading" class="loading-indicator">Loading books...</div>';
+    }
+    
     const books = await listEpubBooks();
     await displayBooks(books);
 });
