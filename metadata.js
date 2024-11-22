@@ -53,12 +53,17 @@ export async function getBookMetadata(bookData) {
 export function generateMetadataHTML(metadata, bookData) {
     console.log('Generating metadata HTML:', { metadata, bookData });
     
-    // Create a temporary div to safely parse HTML in description
+    // Create a temporary div to decode HTML entities and parse HTML
     let sanitizedDescription = 'No description available';
     if (metadata?.description) {
+        // First decode HTML entities
+        const parser = new DOMParser();
+        const decodedDescription = parser.parseFromString(metadata.description, 'text/html').body.textContent;
+        
+        // Now create the HTML structure
         const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = metadata.description;
-        // Keep the HTML structure but ensure it's safe
+        tempDiv.innerHTML = decodedDescription;
+        
         sanitizedDescription = tempDiv.innerHTML;
     }
 
