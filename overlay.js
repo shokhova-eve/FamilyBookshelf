@@ -91,7 +91,8 @@ if (!window.overlay) {
 // Example usage for book clicks:
 document.querySelectorAll('.epub-book').forEach(book => {
     book.addEventListener('click', () => {
-        overlay.open(`<h2>Book Details</h2>
-                     <p>Content for ${book.dataset.title || 'Book'}</p>`);
+		const metadataHtml = generateMetadataHTML(metadata, bookData);
+		window.overlay.open(metadataHtml);
+		document.querySelector('.right-section .overlay').classList.add('active');
     });
 });

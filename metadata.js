@@ -58,82 +58,38 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 	}
 	
-	async function displayBooks(booksMetadata) {
+	async function displayMetadata(booksMetadata) {
 		try {
-			console.log('Displaying books:', booksMetadata);
-			booksContainer.innerHTML = ''; // Clear loading indicator
+			console.log('Processing books metadata:', booksMetadata);
 			
 			if (!Array.isArray(booksMetadata)) {
 				throw new Error('Books metadata is not an array');
 			}
 			
-			const bookElements = await Promise.all(booksMetadata.map(async bookData => {
-				const bookElement = document.createElement('div');
-				bookElement.className = 'epub-book';
-				
-				// Create a temporary Book instance to get metadata
+			const overlayContent = document.querySelector('.overlay-content');
+			const enrichedBooksMetadata = [];
+			
+			await Promise.all(booksMetadata.map(async bookData => {
 				const book = ePub(bookData.filePath);
 				try {
 					const metadata = await book.loaded.metadata;
 					console.log('EPub metadata:', metadata);
 					
-					// Store the full metadata for later use
-					bookData.epubMetadata = {
-						title: metadata.title,
-						creator: metadata.creator,
-						description: metadata.description,
-						language: metadata.language,
-						publisher: metadata.publisher,
-						// Add any other metadata fields you need
+					const enrichedBook = {
+						...bookData,
+						epubMetadata: metadata
 					};
-					
-					if (bookData.coverUrl) {
-						bookElement.innerHTML = `
-							<img src="${bookData.coverUrl}" 
-								 alt="${metadata.title || bookData.name}" 
-								 loading="lazy"
-								 style="width: 100%; height: 100%; object-fit: cover;">
-						`;
-					} else {
-						bookElement.innerHTML = `
-							<div class="no-cover">
-								<p>${metadata.title || bookData.name}</p>
-							</div>
-						`;
-					}
-					
-					// Add click handler with full metadata
-					bookElement.addEventListener('click', (e) => {
-						const metadataHtml = `
-							<div class="metadata-container">
-								<h1 class="book-title">${metadata.title || bookData.name}</h1>
-								<h2 class="book-author">${metadata.creator || 'Unknown Author'}</h2>
-								<div class="book-description">
-									${metadata.description || 'No description available'}
-								</div>
-								${metadata.publisher ? `<p class="book-publisher">Publisher: ${metadata.publisher}</p>` : ''}
-								${metadata.language ? `<p class="book-language">Language: ${metadata.language}</p>` : ''}
-							</div>
-						`;
-						window.overlay.open(metadataHtml);
-					});
+					enrichedBooksMetadata.push(enrichedBook);
 					
 				} catch (error) {
 					console.error('Error loading epub metadata:', error);
-					// Fallback to basic display if metadata loading fails
-					bookElement.innerHTML = `
-						<div class="no-cover">
-							<p>${bookData.name}</p>
-						</div>
-					`;
+					enrichedBooksMetadata.push(bookData);
 				}
-				
-				return bookElement;
 			}));
 			
-			booksContainer.append(...bookElements);
+			return enrichedBooksMetadata;
 		} catch (error) {
-			console.error('Error in displayBooks:', error);
+			console.error('Error in displayMetadata:', error);
 			throw error;
 		}
 	}
@@ -144,11 +100,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 		
 		if (booksMetadata) {
 			console.log('Using cached book data');
-			await displayBooks(booksMetadata);
+			await displayMetadata(booksMetadata);
 		} else {
 			console.log('Fetching fresh book data');
 			booksMetadata = await fetchAndCacheBooks();
-			await displayBooks(booksMetadata);
+			await displayMetadata(booksMetadata);
 		}
 		
 	} catch (error) {
@@ -161,3 +117,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 			</div>`;
 	}
 });
+
+export function generateMetadataHTML(metadata, bookData) {
+	const title = metadata.title || bookData.name;
+	const author = metadata?.creator ? (Array.isArray(metadata.creator) 
+        ? metadata.creator.join(', ') 
+        : metadata.creator) : 'Unknown Author';
+	
+	return `
+		<div class="metadata-container">
+			<h1 class="book-title">${title}</h1>
+			<h2 class="book-author">${author}</h2>
+			<div class="book-details">
+				<div class="book-description">
+					${metadata.description || 'No description available'}
+				</div>
+				${metadata.publisher ? `<p class="book-publisher">Publisher: ${metadata.publisher}</p>` : ''}
+				${metadata.language ? `<p class="book-language">Language: ${metadata.language}</p>` : ''}
+				${metadata.rights ? `<p class="book-rights">Rights: ${metadata.rights}</p>` : ''}
+				${metadata.pubdate ? `<p class="book-pubdate">Publication Date: ${metadata.pubdate}</p>` : ''}
+			</div>
+		</div>
+	`;
+}
