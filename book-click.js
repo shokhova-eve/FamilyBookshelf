@@ -1,4 +1,4 @@
-import { generateMetadataHTML } from './metadata.js';
+import { handleBookClick } from './metadata.js';
 
 class BookClickHandler {
     constructor() {
@@ -6,19 +6,16 @@ class BookClickHandler {
         this.handleBookClick = this.handleBookClick.bind(this);
     }
 
-    handleBookClick(event, bookData) {
+    async handleBookClick(event, bookData) {
         event.preventDefault();
+        console.log('Book clicked:', bookData);
         
-        // Extract metadata safely
-        const metadata = bookData.metadata || {};
+        // Get the HTML content
+        const htmlContent = await handleBookClick(bookData);
         
-        // Use the new generateMetadataHTML function
-        const metadataHtml = generateMetadataHTML(bookData.epubMetadata, bookData);
-
-        // Display in overlay
-        this.overlay.open(metadataHtml);
+        // Use the existing open method with the content
+        this.overlay.open(htmlContent);
     }
 }
 
-// Create a global instance
 window.bookClickHandler = new BookClickHandler();

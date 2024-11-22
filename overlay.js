@@ -5,6 +5,7 @@ class Overlay {
         }
 
         this.overlay = document.querySelector('.overlay');
+		this.overlayContent = this.overlay.querySelector('.overlay-content');
         this.arrowButton = document.querySelector('.arrow-button');
         this.closeButton = document.querySelector('.close-button');
         
