@@ -7,22 +7,35 @@ Powered on NodeJS + Firebase + Bootstrap + EPUB.js
 ## Project Structure
 
 ```
-/Bookshelf
-├── assets/
-│   ├── images/
-│   │   ├── start-background.png
-│   │   ├── start-bookshelf.png
-│   │   └── bookshelf-background.png
-│   └── styles/
-│       └── style.css
+/Family-Library
+├── public/
+│   ├── assets/
+│   │   ├── images/
+│   │   │   ├── animation/
+│   │   │   │   └── flame.png
+│   │   │   ├── backup/
+│   │   │   │   ├── start-background.png
+│   │   │   │   ├── start-bookshelf.png
+│   │   │   │   ├── bookshelf-background.jpg
+│   │   │   │   └── bookshelf-background2.png
+│   │   │   ├── start-background.png
+│   │   │   ├── start-bookshelf.png
+│   │   │   ├── bookshelf-background.png
+│   │   │   ├── book-stack.png
+│   │   │   └── google-icon.png
+│   │   └── styles/
+│   │       ├── auth.css
+│   │       ├── start-page.css
+│   │       └── right-section.css
+│   │       └── audio.css
+│   │       └── bookshelf-page.css
+│   ├── auth-handler.js
+│   ├── index.html
+│   └── firebase.json
 ├── backend/
 │   └── server.js
-├── index.html
-├── bookshelf.html
-├── main.js
-├── book-click.js
-├── auth-handler.js
-└── README.md
+├── .gitignore
+└── .gitattributes
 ```
 
 ## Features

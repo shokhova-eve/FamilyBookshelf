@@ -1,4 +1,4 @@
-const BACKEND_URL = 'http://localhost:5500';
+const BACKEND_URL = 'https://familybookshelf.web.app/api';
 
 // Cache helper functions
 async function getCachedBooks() {
@@ -108,16 +108,20 @@ async function displayBooks(books) {
     }
 }
 
-// Initialize when page loads
+// Modified initialization code
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('Initializing books...');
+    // Check if we're on the bookshelf page by looking for the books-grid element
     const booksGrid = document.querySelector('.books-grid');
+    const isBookshelfPage = window.location.pathname.includes('bookshelf.html');
     
-    // Show loading indicator before fetching books
-    if (booksGrid) {
+    if (booksGrid && isBookshelfPage) {
+        console.log('Initializing books on bookshelf page...');
+        // Show loading indicator before fetching books
         booksGrid.innerHTML = '<div id="loading" class="loading-indicator">Loading books...</div>';
+        
+        const books = await listEpubBooks();
+        await displayBooks(books);
+    } else {
+        console.log('Not on bookshelf page, skipping books initialization');
     }
-    
-    const books = await listEpubBooks();
-    await displayBooks(books);
 });

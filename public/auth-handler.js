@@ -1,5 +1,5 @@
 import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-import { auth } from './backend/firebase-config.js';
+import { auth } from '../backend/firebase-config.js';
 
 function openLoginForm() {
     const modal = document.getElementById('authModal');
