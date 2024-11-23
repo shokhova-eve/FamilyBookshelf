@@ -1,5 +1,5 @@
 import { auth, googleProvider } from '../backend/firebase-config.js';
-import { signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 const AUTH_API_URL = 'http://localhost:5500';
 
@@ -213,7 +213,31 @@ function setupUserMenu() {
                 arrow.style.transform = userDropdown.classList.contains('show') ? 'rotate(180deg)' : '';
             }
         });
-
+	
+	if (logoutBtn) {
+		logoutBtn.addEventListener('click', async (e) => {
+			e.preventDefault();
+			try {
+				await signOut(auth);  // Sign out from Firebase
+				
+				// Clear any local storage or session data if you have any
+				localStorage.removeItem('user');
+				
+				// Update UI
+				updateUIForUser(null);
+				
+				// Optional: Redirect to home page or show a message
+				console.log('Successfully logged out');
+				
+				// Optional: Show success message
+				alert('Successfully logged out');
+				
+			} catch (error) {
+				console.error('Error signing out:', error);
+				alert('Error signing out. Please try again.');
+			}
+		});
+	}
         // Close dropdown when clicking outside
         window.addEventListener('click', (event) => {
             if (!event.target.matches('.user-menu-btn') && !event.target.matches('.dropdown-arrow')) {
@@ -262,13 +286,24 @@ function updateUIForUser(user) {
         if (unauthButtons) unauthButtons.style.display = 'block';
         if (userMenu) userMenu.style.display = 'none';
         if (userGreeting) userGreeting.textContent = 'Hi, User';
+
+		const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+        dropdowns.forEach(dropdown => {
+            dropdown.classList.remove('show');
+        });
     }
 }
 
 // Make sure the auth state observer is set up
 auth.onAuthStateChanged((user) => {
-    console.log('Auth state changed:', user); // Add debugging
+    console.log('Auth state changed:', user);
     updateUIForUser(user);
+    
+    if (!user) {
+        // User is signed out
+        console.log('User is signed out');
+        // Additional cleanup if needed
+    }
 });
 
 // Add a function to set up all event listeners
@@ -313,5 +348,6 @@ export {
     handleSignup,
     handleGoogleSignIn,
     handleGoogleSignUp,
-    setupAuthEventListeners
+    setupAuthEventListeners,
+	setupUserMenu
 };
