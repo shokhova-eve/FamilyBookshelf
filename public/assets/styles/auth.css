@@ -216,3 +216,57 @@
 .error-message.visible {
     display: block;
 }
+
+.form-group {
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.switch-form-text {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.switch-form-text a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.switch-form-text a:hover {
+    text-decoration: underline;
+}
+
+.primary-btn, .google-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.button-text {
+    display: inline-block;
+}

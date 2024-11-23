@@ -1,5 +1,7 @@
-import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-import { auth } from '../backend/firebase-config.js';
+import { auth, googleProvider } from '../backend/firebase-config.js';
+import { signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+const AUTH_API_URL = 'http://127.0.0.1:5501';
 
 function openLoginForm() {
     const modal = document.getElementById('authModal');
@@ -34,91 +36,33 @@ function openSignupForm() {
 }
 
 function signInWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            const user = result.user;
-            console.log("Successfully signed in with Google:", user);
-            
-            // Close the auth modal
-            const modal = document.getElementById('authModal');
-            modal.style.display = 'none';
-        })
-        .catch((error) => {
-            console.error("Error signing in with Google:", error);
-            alert("Failed to sign in with Google. Please try again.");
-        });
+    // Redirect to backend auth endpoint
+    window.location.href = `${AUTH_API_URL}/google`;
 } 
 
-async function handleLogin() {
-    const emailInput = document.getElementById('loginEmail');
-    const passwordInput = document.getElementById('loginPassword');
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    // Reset previous error states
-    emailInput.classList.remove('invalid');
-    passwordInput.classList.remove('invalid');
-
-    // Validate empty fields
-    if (!email) {
-        emailInput.classList.add('invalid');
-        alert("Please enter your email address");
-        return;
-    }
-    if (!password) {
-        passwordInput.classList.add('invalid');
-        alert("Please enter your password");
-        return;
-    }
-
-    // Basic email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        emailInput.classList.add('invalid');
-        alert("Please enter a valid email address");
-        return;
-    }
-
+async function handleLogin(email, password) {
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log("Successfully logged in:", userCredential.user);
+        const response = await fetch(`${AUTH_API_URL}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+            credentials: 'include' // for handling cookies
+        });
         
-        // Reset any error states on success
-        emailInput.classList.remove('invalid');
-        passwordInput.classList.remove('invalid');
-        
-        // Close the auth modal
-        const modal = document.getElementById('authModal');
-        modal.style.display = 'none';
-    } catch (error) {
-        console.error("Error logging in:", error.code, error.message);
-        let errorMessage = "Failed to log in. ";
-        
-        switch (error.code) {
-            case 'auth/invalid-email':
-                emailInput.classList.add('invalid');
-                errorMessage += "Invalid email format.";
-                break;
-            case 'auth/user-not-found':
-                emailInput.classList.add('invalid');
-                errorMessage += "No account exists with this email.";
-                break;
-            case 'auth/wrong-password':
-                passwordInput.classList.add('invalid');
-                errorMessage += "Incorrect password.";
-                break;
-            case 'auth/invalid-credential':
-                emailInput.classList.add('invalid');
-                passwordInput.classList.add('invalid');
-                errorMessage += "Invalid email or password.";
-                break;
-            default:
-                errorMessage += error.message;
+        if (!response.ok) {
+            throw new Error('Login failed');
         }
         
-        alert(errorMessage);
+        const data = await response.json();
+        // Handle successful login
+        const modal = document.getElementById('authModal');
+        modal.style.display = 'none';
+        
+    } catch (error) {
+        console.error("Error logging in:", error);
+        alert("Failed to log in. Please try again.");
     }
 }
 
@@ -150,35 +94,111 @@ async function handleSignup() {
     }
 
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log("Successfully signed up:", userCredential.user);
+        const response = await fetch(`${AUTH_API_URL}/signup`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+            credentials: 'include' // for handling cookies
+        });
+
+        if (!response.ok) {
+            throw new Error('Signup failed');
+        }
+
+        const data = await response.json();
+        console.log("Successfully signed up:", data);
         
         // Close the auth modal
         const modal = document.getElementById('authModal');
         modal.style.display = 'none';
     } catch (error) {
         console.error("Error signing up:", error);
-        let errorMessage = "Failed to sign up. ";
-
-        switch (error.code) {
-            case 'auth/email-already-in-use':
-                errorMessage += "This email is already registered.";
-                break;
-            case 'auth/invalid-email':
-                errorMessage += "Invalid email format.";
-                break;
-            case 'auth/operation-not-allowed':
-                errorMessage += "Email/password accounts are not enabled.";
-                break;
-            case 'auth/weak-password':
-                errorMessage += "Password is too weak.";
-                break;
-            default:
-                errorMessage += error.message;
-        }
-        
-        alert(errorMessage);
+        alert("Failed to sign up. Please try again.");
     }
 }
 
-export { openLoginForm, openSignupForm, signInWithGoogle, handleLogin, handleSignup };
+async function handleGoogleSignIn() {
+    try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        
+        // Get the Google OAuth tokens
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+
+        // Send the user data to your backend
+        const response = await fetch(`${AUTH_API_URL}/google-auth`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+                uid: user.uid,
+                token: token
+            }),
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to authenticate with backend');
+        }
+
+        const data = await response.json();
+        console.log("Successfully authenticated with Google:", data);
+        
+        // Close the auth modal
+        const modal = document.getElementById('authModal');
+        if (modal) modal.style.display = 'none';
+
+        // You might want to update UI or redirect user
+        // window.location.href = '/dashboard';
+
+    } catch (error) {
+        console.error("Error with Google authentication:", error);
+        if (error.code === 'auth/popup-closed-by-user') {
+            alert("Google sign-in was cancelled. Please try again.");
+        } else {
+            alert("Failed to authenticate with Google. Please try again.");
+        }
+    }
+}
+
+// Add a Google sign-up button click handler (this will use the same flow)
+function handleGoogleSignUp() {
+    // Since Google handles both sign-in and sign-up in the same flow,
+    // we can reuse the handleGoogleSignIn function
+    return handleGoogleSignIn();
+}
+
+// Add these to your existing event listeners
+document.getElementById('switchToSignup').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('signupForm').style.display = 'block';
+});
+
+document.getElementById('switchToLogin').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('signupForm').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'block';
+});
+
+document.getElementById('closeAuthModal').addEventListener('click', () => {
+    document.getElementById('authModal').style.display = 'none';
+});
+
+// Update the exports
+export { 
+    openLoginForm, 
+    openSignupForm, 
+    signInWithGoogle, 
+    handleLogin, 
+    handleSignup, 
+    handleGoogleSignIn,
+    handleGoogleSignUp  // Add this to exports
+};
