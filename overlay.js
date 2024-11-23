@@ -80,8 +80,16 @@ class Overlay {
             this.expand();
         } else {
             this.minimize();
+			this.resetScroll();
         }
     }
+
+	resetScroll() {
+		this.overlayContent.scrollTo({
+			top: 40,
+			behavior: 'smooth'
+		});
+	}
 }
 
 // Create single instance

@@ -19,9 +19,9 @@
         <div class="container">
             <a class="navbar-brand" href="#">My App</a>
             <div class="auth-container">
-                <button class="auth-btn" onclick="openLoginForm()">Login</button>
+                <button class="auth-btn" id="loginBtn">Login</button>
                 <span class="auth-divider">|</span>
-                <button class="auth-btn" onclick="openSignupForm()">Sign Up</button>
+                <button class="auth-btn" id="signupBtn">Sign Up</button>
             </div>
         </div>
     </nav>
@@ -99,20 +99,34 @@
     <script src="https://www.gstatic.com/firebasejs/10.x.x/firebase-auth.js"></script>
 
     <!-- Your other scripts -->
-    <script src="auth-handler.js"></script>
-    <script src="book-click.js"></script>
-	<script src="main.js"></script>
+    <script type="module">
+        import { openLoginForm, openSignupForm, signInWithGoogle, handleLogin, handleSignup } from './auth-handler.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Auth buttons
+            document.getElementById('loginBtn').addEventListener('click', openLoginForm);
+            document.getElementById('signupBtn').addEventListener('click', openSignupForm);
+            
+            // Form submission
+            document.getElementById('loginButton').addEventListener('click', handleLogin);
+            document.getElementById('signupButton').addEventListener('click', handleSignup);
+            
+            // Google sign-in
+            document.getElementById('googleSignIn').addEventListener('click', signInWithGoogle);
+            document.getElementById('googleSignUp').addEventListener('click', signInWithGoogle);
+        });
+    </script>
 
     <div id="authModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
+            <button class="close">&times;</button>
             <div id="loginForm" class="auth-form">
                 <h2>Login</h2>
                 <input type="email" id="loginEmail" placeholder="Email">
                 <input type="password" id="loginPassword" placeholder="Password">
-                <button onclick="handleLogin()">Login</button>
+                <button type="submit" id="loginButton">Login</button>
                 <div class="divider">or</div>
-                <button id="googleSignIn" class="google-btn">
+                <button class="google-btn" id="googleSignIn">
                     <img src="assets/images/google-icon.png" alt="Google Icon">
                     Sign in with Google
                 </button>
@@ -121,9 +135,9 @@
                 <h2>Sign Up</h2>
                 <input type="email" id="signupEmail" placeholder="Email">
                 <input type="password" id="signupPassword" placeholder="Password">
-                <button onclick="handleSignup()">Sign Up</button>
+                <button type="submit" id="signupButton">Sign Up</button>
                 <div class="divider">or</div>
-                <button id="googleSignUp" class="google-btn">
+                <button class="google-btn" id="googleSignUp">
                     <img src="assets/images/google-icon.png" alt="Google Icon">
                     Sign up with Google
                 </button>

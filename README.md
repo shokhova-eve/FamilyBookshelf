@@ -45,10 +45,12 @@ Images:
 - <a href="https://www.freepik.com/free-vector/flat-style-audio-player-control-button-symbol_149280203.htm#fromView=search&page=1&position=51&uuid=ed033f62-e76c-433e-bfcb-8fbbddadeab0">Image by starline on Freepik</a>
 
 ## Current issues:
-- After minimizing overlay, the content is not scrolled to the title
 - Book grid is not responsive enough
 - Metadata is loading too slowly
-- Need to add controle over cache size
+- Need to add control over cache size
 - Bind books to bookshelves, add second bookshelf
 - Add more animations on the first screen
 - Add borrow/return functionality
+- Show player on all pages and work all the time, not only on the main page
+- Fix the shadows under books, and under bookshelfs on index page
+- Fix login form
