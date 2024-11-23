@@ -1,0 +1,95 @@
+<div id="authModal" class="modal">
+	<div class="modal-content">
+		<button class="close" id="closeAuthModal">&times;</button>
+		
+		<!-- Login Form -->
+		<div id="loginForm" class="auth-form">
+			<h2>Login</h2>
+			<form id="loginFormElement" novalidate>
+				<div class="form-group">
+					<input 
+						type="email" 
+						id="loginEmail" 
+						placeholder="Email"
+						required
+						autocomplete="email">
+					<span class="error-message" id="loginEmailError"></span>
+				</div>
+				<div class="form-group">
+					<input 
+						type="password" 
+						id="loginPassword" 
+						placeholder="Password"
+						required
+						autocomplete="current-password">
+					<span class="error-message" id="loginPasswordError"></span>
+				</div>
+				<button 
+					type="submit" 
+					id="loginButton" 
+					class="primary-btn">
+					<span class="button-text">Login</span>
+					<span class="spinner" style="display: none;"></span>
+				</button>
+			</form>
+			
+			<div class="divider">or</div>
+			
+			<button class="google-btn" id="googleSignIn">
+				<img src="assets/images/google-icon.png" alt="Google Icon">
+				<span class="button-text">Sign in with Google</span>
+				<span class="spinner" style="display: none;"></span>
+			</button>
+			
+			<p class="switch-form-text">
+				Don't have an account? 
+				<a href="#" id="switchToSignup">Sign up</a>
+			</p>
+		</div>
+
+		<!-- Signup Form -->
+		<div id="signupForm" class="auth-form" style="display: none;">
+			<h2>Sign Up</h2>
+			<form id="signupFormElement" novalidate>
+				<div class="form-group">
+					<input 
+						type="email" 
+						id="signupEmail" 
+						placeholder="Email"
+						required
+						autocomplete="email">
+					<span class="error-message" id="signupEmailError"></span>
+				</div>
+				<div class="form-group">
+					<input 
+						type="password" 
+						id="signupPassword" 
+						placeholder="Password"
+						required
+						autocomplete="new-password">
+					<span class="error-message" id="signupPasswordError"></span>
+				</div>
+				<button 
+					type="submit" 
+					id="signupButton"
+					class="primary-btn">
+					<span class="button-text">Sign Up</span>
+					<span class="spinner" style="display: none;"></span>
+				</button>
+			</form>
+			
+			<div class="divider">or</div>
+			
+			<button class="google-btn" id="googleSignUp">
+				<img src="assets/images/google-icon.png" alt="Google Icon">
+				<span class="button-text">Sign up with Google</span>
+				<span class="spinner" style="display: none;"></span>
+			</button>
+			
+			<p class="switch-form-text">
+				Already have an account? 
+				<a href="#" id="switchToLogin">Login</a>
+			</p>
+		</div>
+	</div>
+</div>
