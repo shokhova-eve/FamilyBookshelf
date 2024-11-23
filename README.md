@@ -67,3 +67,4 @@ Images:
 - Show player on all pages and work all the time, not only on the main page
 - Fix the shadows under books, and under bookshelfs on index page
 - Fix login form
+- Separate audio and login to components of index.html

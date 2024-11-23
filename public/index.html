@@ -18,10 +18,26 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="#">My App</a>
+            
+            <!-- Auth Container -->
             <div class="auth-container">
-                <button class="auth-btn" id="loginBtn">Login</button>
-                <span class="auth-divider">|</span>
-                <button class="auth-btn" id="signupBtn">Sign Up</button>
+                <!-- Unauthenticated State -->
+                <div id="unauthenticatedButtons">
+                    <button class="btn btn-outline-light me-2" id="loginBtn">Login</button>
+                    <button class="btn btn-light" id="signupBtn">Sign Up</button>
+                </div>
+
+                <!-- Authenticated State -->
+                <div id="userMenu" style="display: none;">
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="userMenuBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="userGreeting">Hi, User</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuBtn">
+                            <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>

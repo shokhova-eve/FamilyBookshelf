@@ -1,6 +1,6 @@
 async function loadAuthModal() {
     try {
-        const response = await fetch('/auth-form.html');
+        const response = await fetch('auth-form.html');
         const html = await response.text();
         
         // Create a container for the auth modal

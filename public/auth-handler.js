@@ -173,6 +173,8 @@ async function handleGoogleSignIn() {
         const data = await response.json();
         console.log("Successfully authenticated with Google:", data);
         
+		updateUIForUser(user);
+
         // Close the auth modal
         const modal = document.getElementById('authModal');
         if (modal) modal.style.display = 'none';
@@ -196,6 +198,78 @@ function handleGoogleSignUp() {
     // we can reuse the handleGoogleSignIn function
     return handleGoogleSignIn();
 }
+
+// Add this function before setupAuthEventListeners
+function setupUserMenu() {
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+    
+    if (userMenuBtn && userDropdown) {
+        userMenuBtn.addEventListener('click', () => {
+            userDropdown.classList.toggle('show');
+            const arrow = userMenuBtn.querySelector('.dropdown-arrow');
+            if (arrow) {
+                arrow.style.transform = userDropdown.classList.contains('show') ? 'rotate(180deg)' : '';
+            }
+        });
+
+        // Close dropdown when clicking outside
+        window.addEventListener('click', (event) => {
+            if (!event.target.matches('.user-menu-btn') && !event.target.matches('.dropdown-arrow')) {
+                if (userDropdown.classList.contains('show')) {
+                    userDropdown.classList.remove('show');
+                    const arrow = userMenuBtn.querySelector('.dropdown-arrow');
+                    if (arrow) {
+                        arrow.style.transform = '';
+                    }
+                }
+            }
+        });
+    }
+
+    // Handle logout
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await auth.signOut();
+                updateUIForUser(null);
+            } catch (error) {
+                console.error('Error signing out:', error);
+                alert('Error signing out. Please try again.');
+            }
+        });
+    }
+}
+
+// Add this function to handle UI updates
+function updateUIForUser(user) {
+    console.log('Updating UI for user:', user); // Add debugging
+    const unauthButtons = document.getElementById('unauthenticatedButtons');
+    const userMenu = document.getElementById('userMenu');
+    const userGreeting = document.getElementById('userGreeting');
+
+    if (user) {
+        // User is signed in
+        console.log('User is signed in, updating UI'); // Add debugging
+        if (unauthButtons) unauthButtons.style.display = 'none';
+        if (userMenu) userMenu.style.display = 'block';
+        if (userGreeting) userGreeting.textContent = `Hi, ${user.displayName || user.email}`;
+    } else {
+        // User is signed out
+        console.log('User is signed out, updating UI'); // Add debugging
+        if (unauthButtons) unauthButtons.style.display = 'block';
+        if (userMenu) userMenu.style.display = 'none';
+        if (userGreeting) userGreeting.textContent = 'Hi, User';
+    }
+}
+
+// Make sure the auth state observer is set up
+auth.onAuthStateChanged((user) => {
+    console.log('Auth state changed:', user); // Add debugging
+    updateUIForUser(user);
+});
 
 // Add a function to set up all event listeners
 function setupAuthEventListeners() {
