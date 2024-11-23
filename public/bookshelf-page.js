@@ -1,4 +1,4 @@
-const BACKEND_URL = 'https://familybookshelf.web.app/api';
+const BACKEND_URL = 'http://localhost:5500';
 
 // Cache helper functions
 async function getCachedBooks() {
